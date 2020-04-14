@@ -97,7 +97,6 @@ static void Grip_ready() {
 
 //最高二层放物体姿态
 static void Top_SecondFloor_ready() {
-  passive_wait(0.5);
   base_reset();
   printf("SecondFloor_ready\n");
   passive_wait(2.0);
@@ -117,7 +116,6 @@ static void Top_SecondFloor_ready() {
 
 //次高二层放物体姿态
 static void Low_SecondFloor_ready() {
-  passive_wait(0.8);
   base_reset();
   printf("Low_SecondFloor_ready\n");
   passive_wait(2.0);
@@ -137,7 +135,6 @@ static void Low_SecondFloor_ready() {
 
 //一层放物体姿态
 static void FirstFloor_ready() {
-  passive_wait(0.8);
   base_reset();
   printf("FirstFloor_ready\n");
   passive_wait(1.0);
@@ -154,16 +151,18 @@ static void FirstFloor_ready() {
   arm_set_height(ARM_FRONT_CARDBOARD_BOX);
 }
 
+
+
 void Detect()
 {
     int number_of_objects_top = wb_camera_recognition_get_number_of_objects(camera_top);
     int number_of_objects_topf = wb_camera_recognition_get_number_of_objects(camera_top_front);
     int number_of_objects_low = wb_camera_recognition_get_number_of_objects(camera_low);
     int number_of_objects_lowf = wb_camera_recognition_get_number_of_objects(camera_low_front);
-    if(number_of_objects_topf==0 && number_of_objects_lowf==0)
+    if(number_of_objects_topf==0 && number_of_objects_lowf==0 &&number_of_objects_low !=2 && number_of_objects_top != 2)
         BLANK = 1;
     
-   // printf("BLANK: %d",BLANK);
+    printf("BLANK: %d",BLANK);
 }
 
 
@@ -282,7 +281,7 @@ int main(int argc, char **argv) {
     IMAGE_X = objects[NEAREST_INDEX].position_on_image[0];
                        
     if( BUSY == 0 && IMAGE_X <= 67 && IMAGE_X >= 63 && NEAREST<0.32 &&\
-    ( (strcmp(Model,my_models[0])==0 && OBJECT_AREA<4500 && OBJECT_AREA>2900 && box ==0) ||\
+    ( (strcmp(Model,my_models[0])==0 && OBJECT_AREA<4800 && OBJECT_AREA>2900 && box ==0) ||\
       (strcmp(Model,my_models[1])==0 && OBJECT_AREA<5000 && OBJECT_AREA>3500 && boxr == 0) || \
       (strcmp(Model,my_models[2])==0 && OBJECT_AREA<5000 && OBJECT_AREA>3500 && boxb == 0) || \
       (strcmp(Model,my_models[3])==0  && OBJECT_AREA>1700 && canr == 0)  || \
@@ -296,7 +295,7 @@ int main(int argc, char **argv) {
       if(strcmp(Model,my_models[1])==0) boxr = 1;
       if(strcmp(Model,my_models[2])==0) boxb = 1;
       if(strcmp(Model,my_models[3])==0) canr = 1;
-      if(strcmp(Model,my_models[4])==0) cang = 1;
+      if(strcmp(Model,my_models[4])==0) cang =1;
       if(strcmp(Model,my_models[5])==0) jar = 1;
       if(strcmp(Model,my_models[6])==0) beer = 1;
       if(strcmp(Model,my_models[7])==0) water = 1;
@@ -370,8 +369,11 @@ int main(int argc, char **argv) {
         base_reset();
         passive_wait(0.5);
         base_forwards();
+        passive_wait(0.1);
         if(strcmp("cereal boxb", Model_target) == 0)
         {
+          passive_wait(0.8);
+          base_reset();
           Detect();
           if(BLANK ==0){
             Low_SecondFloor_ready();
@@ -380,7 +382,8 @@ int main(int argc, char **argv) {
         }
         else if(strcmp("biscuit box", Model_target) == 0 )
         {
-           passive_wait(0.2);
+           passive_wait(0.8);
+           base_reset();
            Detect();
            if(BLANK == 0){
              Low_SecondFloor_ready();
@@ -390,7 +393,8 @@ int main(int argc, char **argv) {
         
         else if(strcmp("jar", Model_target) == 0 )
         {
-           passive_wait(0.1);
+           passive_wait(0.7);
+           base_reset();
            Detect();
            if(BLANK == 0){
              Top_SecondFloor_ready();
@@ -399,7 +403,8 @@ int main(int argc, char **argv) {
         }
         else
         {
-           passive_wait(0.35);
+           passive_wait(0.85);
+           base_reset();
            Detect();
            if(BLANK == 0){
              Top_SecondFloor_ready(); 
@@ -416,8 +421,21 @@ int main(int argc, char **argv) {
         passive_wait(0.5);
         base_forwards();
         passive_wait(0.8);
-        if(strcmp("biscuit box", Model_target) == 0 ||strcmp("cereal boxb", Model_target) == 0)
+        if(strcmp("biscuit box", Model_target) == 0 )
         {
+        
+           passive_wait(0.8);
+           base_reset();
+           Detect();
+           if(BLANK == 0){
+             Low_SecondFloor_ready();
+             BUSY = 0;
+           }
+        }
+        else if(strcmp("cereal boxb", Model_target) == 0 )
+        {
+           passive_wait(0.8);
+           base_reset();
            Detect();
            if(BLANK == 0){
              Low_SecondFloor_ready();
@@ -426,7 +444,8 @@ int main(int argc, char **argv) {
         }
         else if(strcmp("jar", Model_target) == 0 )
         {
-            passive_wait(0.3);
+            passive_wait(0.8);
+            base_reset();
             Detect();
             if(BLANK == 0){
               Top_SecondFloor_ready();
@@ -435,7 +454,8 @@ int main(int argc, char **argv) {
         }
         else if(strcmp("cereal boxr", Model_target) == 0)
         {
-            passive_wait(0.15);
+            passive_wait(0.65);
+            base_reset();
             Detect();
             if(BLANK == 0){
               Top_SecondFloor_ready();
@@ -443,6 +463,8 @@ int main(int argc, char **argv) {
             }
         }
         else{
+           passive_wait(0.5);
+           base_reset(); 
            Detect();
            if(BLANK == 0){
              Top_SecondFloor_ready();
@@ -459,15 +481,30 @@ int main(int argc, char **argv) {
         base_reset();
         passive_wait(0.5);
         base_forwards();
-        passive_wait(0.1);
-        Detect();
-        if(BLANK == 0){
-          FirstFloor_ready();
-          BUSY = 0;
-        }        
-      }
+        if(strcmp("beer bottle", Model_target) == 0)
+        {
+          passive_wait(0.8);
+          base_reset();
+          Detect();
+          if(BLANK == 0){
+            FirstFloor_ready();
+            BUSY = 0;
+          }
+        }
+        else
+        {
+          passive_wait(0.9);
+          base_reset();
+          Detect();
+          if(BLANK == 0){
+            FirstFloor_ready();
+            BUSY = 0;
+          }
+        }     
+       }
+  
 
-      if(OLF == 0 && OL == 1)
+      if(OLF == 0 && OL == 1 && strcmp("cereal boxb", Model_target) != 0)
       {
         base_reset();
         OTF = 0, OT = 0, OLF = 0, OL= 0;
@@ -476,17 +513,19 @@ int main(int argc, char **argv) {
         passive_wait(0.5);
         base_forwards();
         if(strcmp("water bottle", Model_target) == 0)
-        {
             passive_wait(0.8);
-        }
         else
-          passive_wait(1.1);
+            passive_wait(1.1);
+            
+        passive_wait(0.8);
+        base_reset();
         Detect();
         if(BLANK == 0){
           FirstFloor_ready(); 
           BUSY = 0;
         } 
       }
+      OTF = 0, OT = 0, OLF = 0, OL= 0;
     }
   }
   
