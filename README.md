@@ -1,6 +1,8 @@
 # Webot_Supermarket
 
-## Robotic Softsware Project
+## Robotic Software Project
 
-### platform
+* Platform
     webot 2020
+* Founction 
+    Grab the goods automatically with five camera sensors 
