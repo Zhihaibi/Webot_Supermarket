@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.4
+protoFileHash: 0e75735c82ec45cdba7e9ec6b107d9ec
+containsDevices: 1
+baseType: Robot
+slotType: 
+parameters: translation,rotation,name,controller,controllerArgs,customData,supervisor,synchronization,bodySlot
+tags: 
+license: 
+licenseUrl: 
+documentationUrl: https://cyberbotics.com/doc/guide/youbot
+info: 
